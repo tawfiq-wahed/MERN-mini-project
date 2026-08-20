@@ -1,38 +1,41 @@
-const express=require("express");
-const app=express();
+const express= require('express');
+const app= express();
+const notemodel=require("./db/models/node.model");
 app.use(express.json());
-const note=[];
-app.post("/tawfiq",(req,res)=>{
-   console.log(req.body);
-   note.push(req.body);
-   res.status(201).json({
-    message:"data has been added successfully"
-   })
+  app.post("/add",async(req,res)=>{
+     const data =req.body;
+     console.log(data);
+   await notemodel.create({
+     title:data.title,
+        description:data.description,
+        age:data.age
     })
-
-    app.get("/tawfiq",(req,res)=>{
-   res.status(200).json({
-    message:"data has been retrieved successfully",  
-    note:note
-   })
+    res.status(201).json({ message: "Data added successfully" });
+  })
+  app.get("/get",async(req,res)=>{
+    const data=await notemodel.find();
+    res.status(200).json({
+      message:"Data fetched successfully",
+      data:data
     })
-    app.delete("/tawfiq/:index",(req,res)=>{
-   const index=req.params.index;
-   delete note[index];
-   res.status(200).json({
-    message:"data has been deleted successfully",  
-   })
+  })
+    app.delete("/delete/:id",async(req,res)=>{
+      const id=req.params.id;
+      const data=await notemodel.findOneAndDelete({
+       _id:id
+      })
+    res.status(200).json({
+      message:"Data deleted successfully",
     })
-    
-     app.patch("/tawfiq/:index",(req,res)=>{
-   const index=req.params.index;
-   const description=req.body.description;
-   note[index].description=description;
-   const title=req.body.title;
-   note[index].title=title;
-   res.status(200).json({
-    message:"data has been updated successfully",  
-   })
+  })
+      app.patch("/update/:id",async(req,res)=>{
+      const id=req.params.id;
+      const desc=req.body.description;
+      const data=await notemodel.findOneAndUpdate({
+       _id:id},{description:desc}
+      )
+    res.status(200).json({
+      message:"Data updated successfully",
     })
-    
-module.exports=app;
+  })
+module.exports= app;  
