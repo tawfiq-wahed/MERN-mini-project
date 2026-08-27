@@ -1,7 +1,0 @@
-const mongoose=require("mongoose");
- 
-async function connectDB(){
-  await mongoose.connect("mongodb+srv://tawfiqbinwahed_db_user:SCELVZ18Q9NsImBs@backend.bqwyau3.mongodb.net/tawfiq");
-  console.log("Database connected successfully");
-}
-module.exports=connectDB;
